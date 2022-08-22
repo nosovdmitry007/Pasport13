@@ -62,20 +62,25 @@ for pathImage1 in file:
             imgAdaptiveThre = cv2.bitwise_not(imgAdaptiveThre)
             imgAdaptiveThre=cv2.medianBlur(imgAdaptiveThre,3)
 
-            # Image Array for Display
             imageArray = ([img,imgGray,imgThreshold,imgContours],
                           [imgBigContour,imgWarpColored, imgWarpGray,imgAdaptiveThre])
+
+
+            # Image Array for Display
 
         else:
             imageArray = ([img,imgGray,imgThreshold,imgContours],
                           [imgBlank, imgBlank, imgBlank, imgBlank])
 
+
         # LABELS FOR DISPLAY
         lables = [["Original","Gray","Threshold","Contours"],
                   ["Biggest Contour","Warp Prespective","Warp Gray","Adaptive Threshold"]]
 
+
+
         stackedImage = utlis.stackImages(imageArray,0.75,lables)
-        cv2.imshow("Result",stackedImage)
+        cv2.imshow("Result", stackedImage)
 
         # SAVE IMAGE WHEN 's' key is pressed
         if cv2.waitKey(1) & 0xFF == ord('s'):
