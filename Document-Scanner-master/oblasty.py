@@ -34,7 +34,8 @@ def rotate_image(mat, angle, nam):
 
 
 def oblasty(txt,jpg):
-    shutil.rmtree('oblosty')
+    if os.path.exists('oblosty'):
+        shutil.rmtree('oblosty')
     os.mkdir('oblosty')
 
     f = open(txt, 'r')
