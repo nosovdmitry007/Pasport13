@@ -43,13 +43,13 @@ def recognition():
             pole = pole.replace(' ', '.')
 
             data['pasport'].append({
-                i.split('.', 1)[0]: pole
+                i.split('.', 1)[0]: pole.upper()
             })
 
         else:
             # print(i.split('.', 1)[0], pole, str(result[k][2]))
             data['pasport'].append({
-                i.split('.', 1)[0]: pole.replace('  ', ' ')
+                i.split('.', 1)[0]: pole.replace('  ', ' ').upper()
             })
 
     place_of_birth = place_of_birth.replace(' . ', '.')
@@ -58,10 +58,10 @@ def recognition():
     issued_by_whom = issued_by_whom.replace('  ', ' ')
     series_and_number = series_and_number.replace('  ', ' ')
     data['pasport'].append({
-        'issued_by_whom': issued_by_whom
+        'issued_by_whom': issued_by_whom.upper()
         })
     data['pasport'].append({
-           'place_of_birth': place_of_birth
+           'place_of_birth': place_of_birth.upper()
     })
     data['pasport'].append({
          'series_and_number': series_and_number
