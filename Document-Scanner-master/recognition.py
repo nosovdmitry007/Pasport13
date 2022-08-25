@@ -4,13 +4,14 @@ import json
 import os
 import cv2
 #запускается 1 раз для скачивания библиотек
-reader = easyocr.Reader(['ru', 'en'], gpu=False)
+reader = easyocr.Reader(['ru'], gpu=False)
 def recognition():
     put = 'oblosty'
     data = {}
     data['pasport'] = []
 
-    path = os.listdir(put)
+    pug = os.listdir(put)
+    path = sorted(pug)
     issued_by_whom = ''
     series_and_number = ''
     place_of_birth = ''

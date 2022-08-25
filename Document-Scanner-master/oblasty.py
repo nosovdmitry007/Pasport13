@@ -80,23 +80,36 @@ def oblasty(txt,jpg):
         x = int(l[1])
         h = int(l[4])
         w = int(l[3])
-        if ('signature' not in cat) or ('photograph' not in cat):
+        if ('signature' in cat) or ('photograph' in cat):
+            pass
+        else:
             if 'issued_by_whom' in cat:
                 nam = 'oblosty/' + cat + '_' + str(iss) + '.jpg'
                 iss += 1
-                cropped = image[y:y + h, x:x + w]
+                cropped = image[y-5:y + h+5, x-20:x + w+20]
                 cv2.imwrite(nam, cropped)
             elif 'place_of_birth' in cat:
                 nam = 'oblosty/' + cat + '_' + str(plac) + '.jpg'
                 plac += 1
-                cropped = image[y:y + h, x:x + w]
+                cropped = image[y-5:y + h+5, x-20:x + w+20]
                 cv2.imwrite(nam, cropped)
             elif 'series' in cat:
                 nam = 'oblosty/' + cat + '.jpg'
                 cropped = image[y:y + h, x:x + w]
                 rotate_image(cropped, 90, nam)
+            elif 'issued_by_whom' in cat or 'place_of_birth' in cat:
+                nam = 'oblosty/' + cat + '.jpg'
+                yy = y-5
+                xx = x -20
+                if yy<0:
+                    yy=0
+                if xx<0:
+                    xx=0
+                cropped = image[yy:y + h+5, xx:x + w+20]
+                cv2.imwrite(nam, cropped)
             else:
                 nam = 'oblosty/' + cat + '.jpg'
                 cropped = image[y:y + h, x:x + w]
                 cv2.imwrite(nam, cropped)
+
     recognition()
