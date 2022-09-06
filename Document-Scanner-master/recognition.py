@@ -3,29 +3,55 @@ import easyocr
 import json
 import os
 import cv2
+import csv
 #запускается 1 раз для скачивания библиотек
 reader = easyocr.Reader(['ru'], gpu=False)
-def recognition():
-    put = 'oblosty'
+
+
+# reader = easyocr.Reader(['ru'], recog_network='custom_example', gpu=False)
+
+def to_csv(data):
+  cols = ['ID','issued_by_whom','first_name','date_of_issue','unit_code','series_and_number','surname','surname','patronymic','gender','date_of_birth','place_of_birth']
+  path = "data.csv"
+  with open(path, 'a+', encoding='utf-8') as f:
+    wr = csv.DictWriter(f, fieldnames = cols)
+    if f.tell() == 0:
+        wr.writeheader()
+    wr.writerows(data)
+
+def recognition(jpg, accr_obl):
     data = {}
     data['pasport'] = []
+    d = {}
 
-    pug = os.listdir(put)
+    pug = os.listdir('oblosty')
     path = sorted(pug)
     issued_by_whom = ''
     series_and_number = ''
     place_of_birth = ''
-    ver=0
+    ver = 0
+    acc_ocr = 0
+    col_ocr = 0
+    d['ID'] = (jpg.split('.')[0]).split('/')[-1]
     for i in path:
-        image = cv2.imread(put+'/' + i)
+        put = 'oblosty/' + i
+        image = cv2.imread(put)
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         if 'date' in i or 'code' in i or 'series' in i:
-            result = reader.readtext(image, allowlist='0123456789')
-        result = reader.readtext(image)
+            result = reader.readtext(image, allowlist='0123456789-. ')
+        elif 'surname' in i or 'name' in i or 'patronymic' in i:
+            result = reader.readtext(image,
+                                     allowlist='АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя-')
+        elif 'gender' in i:
+            result = reader.readtext(image, allowlist='.МУЖЕНмужен')
+        else:
+            result = reader.readtext(image,
+                                     allowlist='АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя-№ .')
         pole = ''
-        # print(k.split('_', 3)[0])
         for k in range(len(result)):
             pole = pole + ' ' + str(result[k][1])
+            acc_ocr += result[k][2] * 100
+            col_ocr += 1
         pole = pole.strip()
         if 'issued_by_whom' in i:
             issued_by_whom = issued_by_whom + pole + ' '
@@ -41,32 +67,30 @@ def recognition():
             pole = pole.replace(' . ', '.')
             pole = pole.replace('  ', ' ')
             pole = pole.replace(' ', '.')
-
-            data['pasport'].append({
-                i.split('.', 1)[0]: pole.upper()
-            })
-
+            pole = pole.replace('..', '.')
+            d[i.split('.', 1)[0]] = pole.upper().strip()
         else:
-            # print(i.split('.', 1)[0], pole, str(result[k][2]))
-            data['pasport'].append({
-                i.split('.', 1)[0]: pole.replace('  ', ' ').upper()
-            })
+            d[i.split('.', 1)[0]] = pole.replace('  ', ' ').upper().strip()
 
     place_of_birth = place_of_birth.replace(' . ', '.')
     place_of_birth = place_of_birth.replace('  ', ' ')
+    place_of_birth = place_of_birth.replace('..', '.')
     issued_by_whom = issued_by_whom.replace(' . ', '.')
+    issued_by_whom = issued_by_whom.replace('..', '.')
     issued_by_whom = issued_by_whom.replace('  ', ' ')
     series_and_number = series_and_number.replace('  ', ' ')
-    data['pasport'].append({
-        'issued_by_whom': issued_by_whom.upper()
-        })
-    data['pasport'].append({
-           'place_of_birth': place_of_birth.upper()
-    })
-    data['pasport'].append({
-         'series_and_number': series_and_number
-    })
 
+    d['issued_by_whom'] = issued_by_whom.upper().strip()
+
+    d['place_of_birth'] = place_of_birth.upper().strip()
+
+    d['series_and_number'] = series_and_number.strip()
+
+    accr_ocr = round(acc_ocr / col_ocr, 2)
+    data['pasport'].append(d)
     with open('data.json', 'w', encoding='utf-8') as f:
         f.write(json.dumps(data, ensure_ascii=False))
-    pprint.pprint(data)
+    print('Точность определения областей: ', accr_obl)
+    print('Точность распознания текстов: ', accr_ocr)
+    pprint.pprint(data['pasport'])
+    to_csv(data['pasport'])

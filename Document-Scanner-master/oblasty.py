@@ -43,12 +43,14 @@ def oblasty(txt,jpg):
     koord = 0
     iss = 1
     plac = 1
-    image = cv2.imread(jpg)
-    spiss=[]
+    image = cv2.imread(jpg, cv2.IMREAD_GRAYSCALE)
+    spiss = []
+    acc_obl = 0
+    col_obl = 0
     for line in lines:
 
         if '/' in line:
-            print(line)
+            # print(line)
             koord = 1
             continue
 
@@ -58,8 +60,9 @@ def oblasty(txt,jpg):
             y = u.replace('\t', ' ')
             t = y.replace(')\n', '')
             data = t.split(' ')
-            print(data)
-
+            # print(data)
+            acc_obl += int(data[1][:-1])
+            col_obl += 1
             cat = data[0].replace(':', '')
             y = int(data[5])
             x = int(data[3])
@@ -70,11 +73,12 @@ def oblasty(txt,jpg):
 
     def custom_key(spiss):
         return spiss[2]
+
     spissok = spiss.sort(key=custom_key)
-    print(spiss)
+    # print(spiss)
     # print(spissok)
     for l in spiss:
-        print(l)
+        # print(l)
         cat = l[0]
         y = int(l[2])
         x = int(l[1])
@@ -86,30 +90,33 @@ def oblasty(txt,jpg):
             if 'issued_by_whom' in cat:
                 nam = 'oblosty/' + cat + '_' + str(iss) + '.jpg'
                 iss += 1
-                cropped = image[y-5:y + h+5, x-20:x + w+20]
+                yy = y - 5
+                xx = x - 30
+                if yy < 0:
+                    yy = 0
+                if xx < 0:
+                    xx = 0
+                cropped = image[yy:y + h + 5, xx:x + w + 30]
                 cv2.imwrite(nam, cropped)
             elif 'place_of_birth' in cat:
                 nam = 'oblosty/' + cat + '_' + str(plac) + '.jpg'
                 plac += 1
-                cropped = image[y-5:y + h+5, x-20:x + w+20]
+                yy = y - 5
+                xx = x - 30
+                if yy < 0:
+                    yy = 0
+                if xx < 0:
+                    xx = 0
+                cropped = image[yy:y + h, xx:x + w + 30]
                 cv2.imwrite(nam, cropped)
             elif 'series' in cat:
                 nam = 'oblosty/' + cat + '.jpg'
-                cropped = image[y:y + h, x:x + w]
+                cropped = image[y - 10:y + h + 10, x - 3:x + w + 3]
                 rotate_image(cropped, 90, nam)
-            elif 'issued_by_whom' in cat or 'place_of_birth' in cat:
-                nam = 'oblosty/' + cat + '.jpg'
-                yy = y-5
-                xx = x -20
-                if yy<0:
-                    yy=0
-                if xx<0:
-                    xx=0
-                cropped = image[yy:y + h+5, xx:x + w+20]
-                cv2.imwrite(nam, cropped)
             else:
                 nam = 'oblosty/' + cat + '.jpg'
                 cropped = image[y:y + h, x:x + w]
                 cv2.imwrite(nam, cropped)
-
-    recognition()
+    accr_obl = round(acc_obl / col_obl, 2)
+    # print('Точность определения областей: ', accr_obl)
+    recognition(jpg, accr_obl)
