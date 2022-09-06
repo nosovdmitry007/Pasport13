@@ -141,7 +141,7 @@ else: # Document on the horizontal axis
 
 cv2.namedWindow('image', cv2.WINDOW_NORMAL)
 cv2.setMouseCallback('image', onMouse, img)
-
+#
 while cv2.getWindowProperty('image', 0) >= 0: # Stop if user closes the window with mouse
     cv2.imshow('image', imageCopy)
     cv2.putText(imageCopy, 'Press q to extract or drag the circles to correct.',

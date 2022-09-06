@@ -37,7 +37,7 @@ def oblasty(txt,jpg):
     if os.path.exists('oblosty'):
         shutil.rmtree('oblosty')
     os.mkdir('oblosty')
-
+#
     f = open(txt, 'r')
     lines = f.readlines()
     koord = 0

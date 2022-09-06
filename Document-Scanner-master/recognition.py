@@ -7,7 +7,7 @@ import csv
 #запускается 1 раз для скачивания библиотек
 reader = easyocr.Reader(['ru'], gpu=False)
 
-
+#
 # reader = easyocr.Reader(['ru'], recog_network='custom_example', gpu=False)
 
 def to_csv(data):
