@@ -1,5 +1,6 @@
 import shutil
 from recognition import recognition
+from recognition_slovar import recognition_slovar
 import cv2
 import os
 
@@ -29,15 +30,18 @@ def rotate_image(mat, angle, nam):
     # rotate image with the new bounds and translated rotation matrix
     rotated_mat = cv2.warpAffine(mat, rotation_mat, (bound_w, bound_h))
 
-    cv2.imwrite(nam, rotated_mat)
+    return rotated_mat
 
 
 
 def oblasty(txt,jpg):
+
+    #для вывода областей
     if os.path.exists('oblosty'):
         shutil.rmtree('oblosty')
     os.mkdir('oblosty')
 #
+    oblasty={}
     f = open(txt, 'r')
     lines = f.readlines()
     koord = 0
@@ -74,7 +78,7 @@ def oblasty(txt,jpg):
     def custom_key(spiss):
         return spiss[2]
 
-    spissok = spiss.sort(key=custom_key)
+    # spissok = spiss.sort(key=custom_key)
     # print(spiss)
     # print(spissok)
     for l in spiss:
@@ -89,6 +93,7 @@ def oblasty(txt,jpg):
         else:
             if 'issued_by_whom' in cat:
                 nam = 'oblosty/' + cat + '_' + str(iss) + '.jpg'
+                ob = cat + '_' + str(iss)
                 iss += 1
                 yy = y - 5
                 xx = x - 30
@@ -97,9 +102,11 @@ def oblasty(txt,jpg):
                 if xx < 0:
                     xx = 0
                 cropped = image[yy:y + h + 5, xx:x + w + 30]
-                cv2.imwrite(nam, cropped)
+                # cv2.imwrite(nam, cropped)
+                oblasty[ob] = cropped
             elif 'place_of_birth' in cat:
                 nam = 'oblosty/' + cat + '_' + str(plac) + '.jpg'
+                ob = cat + '_' + str(plac)
                 plac += 1
                 yy = y - 5
                 xx = x - 30
@@ -108,15 +115,21 @@ def oblasty(txt,jpg):
                 if xx < 0:
                     xx = 0
                 cropped = image[yy:y + h, xx:x + w + 30]
-                cv2.imwrite(nam, cropped)
+                # cv2.imwrite(nam, cropped)
+                oblasty[ob] = cropped
             elif 'series' in cat:
                 nam = 'oblosty/' + cat + '.jpg'
+                ob = cat
                 cropped = image[y - 10:y + h + 10, x - 3:x + w + 3]
-                rotate_image(cropped, 90, nam)
+                oblasty[ob] = rotate_image(cropped, 90, nam)
             else:
                 nam = 'oblosty/' + cat + '.jpg'
+                ob = cat
                 cropped = image[y:y + h, x:x + w]
-                cv2.imwrite(nam, cropped)
+                # cv2.imwrite(nam, cropped)
+                oblasty[ob] = cropped
+
     accr_obl = round(acc_obl / col_obl, 2)
     # print('Точность определения областей: ', accr_obl)
-    recognition(jpg, accr_obl)
+    # recognition(jpg, accr_obl)
+    recognition_slovar(jpg, oblasty, accr_obl)

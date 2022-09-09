@@ -5,10 +5,10 @@ import os
 import cv2
 import csv
 #запускается 1 раз для скачивания библиотек
-reader = easyocr.Reader(['ru'], gpu=False)
+# reader = easyocr.Reader(['ru'], gpu=False)
 
 #
-# reader = easyocr.Reader(['ru'], recog_network='custom_example', gpu=False)
+reader = easyocr.Reader(['ru'], recog_network='custom_example', gpu=False)
 
 def to_csv(data):
   cols = ['ID','issued_by_whom','first_name','date_of_issue','unit_code','series_and_number','surname','surname','patronymic','gender','date_of_birth','place_of_birth']
@@ -19,13 +19,14 @@ def to_csv(data):
         wr.writeheader()
     wr.writerows(data)
 
-def recognition(jpg, accr_obl):
+def recognition_slovar(jpg,oblasty, accr_obl):
     data = {}
     data['pasport'] = []
     d = {}
-
-    pug = os.listdir('oblosty')
-    path = sorted(pug)
+    obl = dict(sorted(oblasty.items()))
+    # print(obl)
+    # pug = os.listdir('oblosty')
+    # path = sorted(pug)
     issued_by_whom = ''
     series_and_number = ''
     place_of_birth = ''
@@ -33,10 +34,10 @@ def recognition(jpg, accr_obl):
     acc_ocr = 0
     col_ocr = 0
     d['ID'] = (jpg.split('.')[0]).split('/')[-1]
-    for i in path:
-        put = 'oblosty/' + i
-        image = cv2.imread(put)
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    for i,v in obl.items():
+        # put = 'oblosty/' + i
+        # image = cv2.imread(v)
+        image = cv2.cvtColor(v, cv2.COLOR_BGR2RGB)
         if 'date' in i or 'code' in i or 'series' in i:
             result = reader.readtext(image, allowlist='0123456789-. ')
         elif 'surname' in i or 'name' in i or 'patronymic' in i:
@@ -52,7 +53,7 @@ def recognition(jpg, accr_obl):
 
             pole = pole + ' ' + str(result[k][1])
             acc_ocr += result[k][2] * 100
-            print(str(result[k][1]), ': ',result[k][2] * 100)
+            # print(str(result[k][1]), ': ',result[k][2] * 100)
             col_ocr += 1
         pole = pole.strip()
         if 'issued_by_whom' in i:
