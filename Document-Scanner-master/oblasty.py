@@ -5,7 +5,7 @@ import cv2
 import os
 
 
-def rotate_image(mat, angle, nam):
+def rotate_image(mat, angle):
     """
     Rotates an image (angle in degrees) and expands image to avoid cropping
     """
@@ -28,9 +28,9 @@ def rotate_image(mat, angle, nam):
     rotation_mat[1, 2] += bound_h/2 - image_center[1]
 
     # rotate image with the new bounds and translated rotation matrix
-    rotated_mat = cv2.warpAffine(mat, rotation_mat, (bound_w, bound_h))
+    # rotated_mat = cv2.warpAffine(mat, rotation_mat, (bound_w, bound_h))
 
-    return rotated_mat
+    return cv2.warpAffine(mat, rotation_mat, (bound_w, bound_h))
 
 
 
@@ -121,7 +121,7 @@ def oblasty(txt,jpg):
                 nam = 'oblosty/' + cat + '.jpg'
                 ob = cat
                 cropped = image[y - 10:y + h + 10, x - 3:x + w + 3]
-                oblasty[ob] = rotate_image(cropped, 90, nam)
+                oblasty[ob] = rotate_image(cropped, 90)
             else:
                 nam = 'oblosty/' + cat + '.jpg'
                 ob = cat
