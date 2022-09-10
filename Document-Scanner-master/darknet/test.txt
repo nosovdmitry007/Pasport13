@@ -1,0 +1,25 @@
+ GPU isn't used 
+mini_batch = 1, batch = 1, time_steps = 1, train = 0 
+nms_kind: greedynms (1), beta = 0.600000 
+nms_kind: greedynms (1), beta = 0.600000 
+nms_kind: greedynms (1), beta = 0.600000 
+
+ seen 64, trained: 960 K-images (15 Kilo-batches_64) 
+ Detection layer: 139 - type = 28 
+ Detection layer: 150 - type = 28 
+ Detection layer: 161 - type = 28 
+10002.jpg: Predicted in 537.518000 milli-seconds.
+photograph: 100%	(left_x:   25   top_y:  591   width:  210   height:  246)
+date_of_issue: 97%	(left_x:  110   top_y:  193   width:  166   height:   30)
+issued_by_whom: 96%	(left_x:  227   top_y:  114   width:  324   height:   34)
+gender: 92%	(left_x:  266   top_y:  703   width:   62   height:   30)
+issued_by_whom: 92%	(left_x:  270   top_y:   79   width:  233   height:   34)
+place_of_birth: 91%	(left_x:  284   top_y:  736   width:  260   height:   31)
+patronymic: 97%	(left_x:  396   top_y:  663   width:  156   height:   33)
+date_of_birth: 98%	(left_x:  430   top_y:  699   width:  159   height:   34)
+surname: 99%	(left_x:  431   top_y:  560   width:   87   height:   33)
+signature: 99%	(left_x:  432   top_y:  324   width:  144   height:   61)
+first_name: 83%	(left_x:  443   top_y:  630   width:   61   height:   30)
+unit_code: 99%	(left_x:  476   top_y:  192   width:  109   height:   30)
+series_and_number_1: 99%	(left_x:  641   top_y:  121   width:   37   height:  228)
+series_and_number_2: 99%	(left_x:  644   top_y:  600   width:   37   height:  228)
