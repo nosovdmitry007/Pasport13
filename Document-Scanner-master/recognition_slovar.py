@@ -24,7 +24,7 @@ def recognition_slovar(jpg,oblasty, accr_obl):
     data['pasport'] = []
     d = {}
     obl = dict(sorted(oblasty.items()))
-    print(oblasty.items())
+    # print(oblasty.items())
     # pug = os.listdir('oblosty')
     # path = sorted(pug)
     issued_by_whom = ''

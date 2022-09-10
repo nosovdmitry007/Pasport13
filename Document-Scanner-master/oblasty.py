@@ -49,7 +49,7 @@ def oblasty(txt,jpg):
     spiss = []
     acc_obl = 0
     col_obl = 0
-    for line in lines[14:]:
+    for line in lines[12:]:
         z = line.replace('   ', ' ')
         u = z.replace(':  ', ' ')
         y = u.replace('\t', ' ')
@@ -94,7 +94,7 @@ def oblasty(txt,jpg):
                 # cv2.imwrite(nam, cropped)
                 oblasty[ob] = cropped
             elif 'place_of_birth' in cat:
-                nam = 'oblosty/' + cat + '_' + str(plac) + '.jpg'
+                # nam = 'oblosty/' + cat + '_' + str(plac) + '.jpg'
                 ob = cat + '_' + str(plac)
                 plac += 1
                 yy = y - 5
@@ -107,12 +107,12 @@ def oblasty(txt,jpg):
                 # cv2.imwrite(nam, cropped)
                 oblasty[ob] = cropped
             elif 'series' in cat:
-                nam = 'oblosty/' + cat + '.jpg'
+                # nam = 'oblosty/' + cat + '.jpg'
                 ob = cat
                 cropped = image[y - 10:y + h + 10, x - 3:x + w + 3]
                 oblasty[ob] = rotate_image(cropped, 90)
             else:
-                nam = 'oblosty/' + cat + '.jpg'
+                # nam = 'oblosty/' + cat + '.jpg'
                 ob = cat
                 cropped = image[y:y + h, x:x + w]
                 # cv2.imwrite(nam, cropped)
