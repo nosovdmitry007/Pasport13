@@ -7,7 +7,7 @@ import os
 
 def rotate_image(mat, angle):
     """
-    Rotates an image (angle in degrees) and expands image to avoid cropping
+   Функция для поворота изображений (серийный номер)
     """
 
     height, width = mat.shape[:2] # image shape has 3 dimensions
@@ -34,15 +34,15 @@ def rotate_image(mat, angle):
 
 def oblasty(txt,jpg):
 
-    #для вывода областей
-    if os.path.exists('oblosty'):
-        shutil.rmtree('oblosty')
-    os.mkdir('oblosty')
+    # #для вывода областей
+    # if os.path.exists('oblosty'):
+    #     shutil.rmtree('oblosty')
+    # os.mkdir('oblosty')
 #
     oblasty={}
     f = open(txt, 'r')
     lines = f.readlines()
-    koord = 0
+    # koord = 0
     iss = 0
     plac = 0
     image = cv2.imread(jpg, cv2.IMREAD_GRAYSCALE)
@@ -67,8 +67,9 @@ def oblasty(txt,jpg):
         spiss.append(spis)
     # def custom_key(spiss):
     #     return spiss[2]
-    spissok = sorted(spiss, reverse=True, key=lambda x: x[1])#spiss.sort(key=custom_key)
-    # print(spiss)
+    #a.sort(key=sort_col)
+    spissok = sorted(spiss, reverse=False, key=lambda x: x[2])#spiss.sort(key=custom_key)
+    # print(spiss,'\n')
     # print(spissok)
     for l in spissok:
         # print(l)
@@ -117,8 +118,8 @@ def oblasty(txt,jpg):
                 cropped = image[y:y + h, x:x + w]
                 # cv2.imwrite(nam, cropped)
                 oblasty[ob] = cropped
+        accr_obl = round(acc_obl / col_obl, 2)
 
-    accr_obl = round(acc_obl / col_obl, 2)
     # print('Точность определения областей: ', accr_obl)
     # recognition(jpg, accr_obl)
     recognition_slovar(jpg, oblasty, accr_obl)

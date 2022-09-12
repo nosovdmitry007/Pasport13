@@ -1,10 +1,5 @@
-from automaticfilter import auto_rotait
 import time
 from functools import wraps
-
-put ='photo/0001.jpg'
-out = 'test.txt'
-
 
 def fn_timer(function):
   @wraps(function)
@@ -17,9 +12,3 @@ def fn_timer(function):
         )
     return result
   return function_timer
-
-@fn_timer
-def start():
-    auto_rotait(put,out)
-
-start()

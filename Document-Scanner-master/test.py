@@ -1,4 +1,17 @@
-import os
-put ='photo/0000.jpg'
+from automaticfilter import auto_rotait
+import tracemalloc
+import time
+#Тест производительности
+tracemalloc.start()
+start_time = time.time()
+
+
+put ='photo/0001.jpg'
 out = 'test.txt'
-os.system(f'./darknet/darknet detector test darknet/data/obj.data darknet/cfg/yolov4-obj.cfg yolov4-obj_last.weights {put} -thresh 0.3 -ext_output -dont_show -out result.txt > {out}')
+auto_rotait(put,out)
+
+print("--- %s seconds ---" % (time.time() - start_time))
+current, peak = tracemalloc.get_traced_memory()
+print(f"Current memory usage is {current / 10**3}KB; Peak was {peak / 10**3}KB; Diff = {(peak - current) / 10**3}KB")
+tracemalloc.stop()
+

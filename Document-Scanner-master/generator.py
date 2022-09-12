@@ -17,6 +17,8 @@ for i in file:
     lines.append(line)
     print(line)
 #
-# f = open('gt.txt','w')
+# f = open('gt.txt','w') /home/dima/PycharmProjects/Pasport13/Document-Scanner-master/all_data/ru_train_filtered
 # f.write("\n".join(lines).join("\n"));
 # print(lines)
+
+#/home/dima/PycharmProjects/Pasport13/Document-Scanner-master/all_data/ru_train_filtered

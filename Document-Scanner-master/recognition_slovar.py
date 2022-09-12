@@ -5,14 +5,14 @@ import os
 import cv2
 import csv
 #запускается 1 раз для скачивания библиотек
-reader = easyocr.Reader(['ru'], gpu=False)
+# reader = easyocr.Reader(['ru'], gpu=False)
 
-#
-# reader = easyocr.Reader(['ru'], recog_network='custom_example', gpu=False)
+
+reader = easyocr.Reader(['ru'], recog_network='custom_example', gpu=False)
 
 def to_csv(data):
-  cols = ['ID','issued_by_whom','first_name','date_of_issue','unit_code','series_and_number','surname','surname','patronymic','gender','date_of_birth','place_of_birth']
-  path = "data.csv"
+  cols = ['ID','issued_by_whom','first_name','date_of_issue','unit_code','series_and_number','surname','surname','patronymic','gender','date_of_birth','place_of_birth','accr_obl','accr_ocr']
+  path = "data_many17.csv"
   with open(path, 'a+', encoding='utf-8') as f:
     wr = csv.DictWriter(f, fieldnames = cols)
     if f.tell() == 0:
@@ -51,30 +51,31 @@ def recognition_slovar(jpg,oblasty, accr_obl):
                                      allowlist='АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя-"№ .')
         pole = ''
         for k in range(len(result)):
+            if result[k][2] * 100 >= 32:
+                pole = pole + ' ' + str(result[k][1])
+                acc_ocr += result[k][2] * 100
+                # print(str(result[k][1]), ': ',result[k][2] * 100)
+                col_ocr += 1
+        if pole:
+            pole = pole.strip()
+            if 'issued_by_whom' in i:
+                issued_by_whom = issued_by_whom + pole + ' '
+            if 'place_of_birth' in i:
+                place_of_birth = place_of_birth + pole + ' '
+            if 'series_and_number' in i:
+                if ver < result[k][2]:
+                    series_and_number = pole
 
-            pole = pole + ' ' + str(result[k][1])
-            acc_ocr += result[k][2] * 100
-            # print(str(result[k][1]), ': ',result[k][2] * 100)
-            col_ocr += 1
-        pole = pole.strip()
-        if 'issued_by_whom' in i:
-            issued_by_whom = issued_by_whom + pole + ' '
-        if 'place_of_birth' in i:
-            place_of_birth = place_of_birth + pole + ' '
-        if 'series_and_number' in i:
-            if ver < result[k][2]:
-                series_and_number = pole
-
-        if 'issued_by_whom' in i or 'place_of_birth' in i or 'series_and_number' in i:
-            pass
-        elif 'date' in i:
-            pole = pole.replace(' . ', '.')
-            pole = pole.replace('  ', ' ')
-            pole = pole.replace(' ', '.')
-            pole = pole.replace('..', '.')
-            d[i.split('.', 1)[0]] = pole.upper().strip()
-        else:
-            d[i.split('.', 1)[0]] = pole.replace('  ', ' ').upper().strip()
+            if 'issued_by_whom' in i or 'place_of_birth' in i or 'series_and_number' in i:
+                pass
+            elif 'date' in i:
+                pole = pole.replace(' . ', '.')
+                pole = pole.replace('  ', ' ')
+                pole = pole.replace(' ', '.')
+                pole = pole.replace('..', '.')
+                d[i.split('.', 1)[0]] = pole.upper().strip()
+            else:
+                d[i.split('.', 1)[0]] = pole.replace('  ', ' ').upper().strip()
 
     place_of_birth = place_of_birth.replace(' . ', '.')
     place_of_birth = place_of_birth.replace('  ', ' ')
@@ -91,7 +92,11 @@ def recognition_slovar(jpg,oblasty, accr_obl):
     d['series_and_number'] = series_and_number.strip()
 
     accr_ocr = round(acc_ocr / col_ocr, 2)
+    d['accr_ocr'] = accr_ocr
+    d['accr_obl'] = accr_obl
     data['pasport'].append(d)
+    # d['accr_ocr'] = accr_ocr
+    # d['accr_obl'] = accr_obl
     with open('data.json', 'w', encoding='utf-8') as f:
         f.write(json.dumps(data, ensure_ascii=False))
     print('Точность определения областей: ', accr_obl)

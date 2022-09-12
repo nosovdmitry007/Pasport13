@@ -76,7 +76,7 @@ def auto_rotait(photo,out):
 
   # stackedImage = stackImages(imageArray,0.75,lables)
 
-  cv2.imwrite(str(ph), imgWarpColored)
+  cv2.imwrite(ph, imgWarpColored)
   # count += 1
   print(pathImage)
-  yolo(str(ph),out)
+  yolo(ph,out)
