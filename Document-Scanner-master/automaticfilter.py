@@ -1,24 +1,19 @@
 import cv2
 import numpy as np
 import utlis
-import os
+
 from yolo import yolo
+#Программа по автоматичекому выравниванию паспорта, если есть фон, без фона работает не корректно
 def auto_rotait(photo,out):
   ########################################################################
   webCamFeed = False
-  # pathImage = "55.jpg"
+
   cap = cv2.VideoCapture(1)
   cap.set(10,160)
   heightImg = 985
   widthImg = 700
   ########################################################################
 
-  count=0
-
-  # file = os.listdir('pasport_photo')
-  # # while True:
-  # print(file)
-  # for pathImage1 in file:
   ph = photo.split('/')[-1]
   pathImage = photo
   if webCamFeed:success, img = cap.read()
@@ -26,7 +21,6 @@ def auto_rotait(photo,out):
       # print(pathImage)
   img = cv2.resize(img, (widthImg, heightImg)) # ИЗМЕНЕНИЕ РАЗМЕРА ИЗОБРАЖЕНИЯ
 
-  imgBlank = np.zeros((heightImg,widthImg, 3), np.uint8) # ПРИ НЕОБХОДИМОСТИ СОЗДАЙТЕ ПУСТОЕ ИЗОБРАЖЕНИЕ ДЛЯ ТЕСТИРОВАНИЯ ОТЛАДКИ
   imgGray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) # ПРЕОБРАЗОВАНИЕ ИЗОБРАЖЕНИЯ В ОТТЕНКИ СЕРОГО
   imgBlur = cv2.GaussianBlur(imgGray, (5, 5), 1) # ДОБАВИТЬ РАЗМЫТИЕ ПО ГАУССУ
   imgThreshold = cv2.Canny(imgBlur,20,20)#thres[0],thres[1]) # ПРИМЕНИТЕ ХИТРОЕ РАЗМЫТИЕ
@@ -46,7 +40,6 @@ def auto_rotait(photo,out):
   if biggest.size != 0:
       biggest=utlis.reorder(biggest)
       cv2.drawContours(imgBigContour, biggest, -1, (0, 255, 0), 20) # НАРИСУЙТЕ САМЫЙ БОЛЬШОЙ КОНТУР
-      imgBigContour = utlis.drawRectangle(imgBigContour,biggest,2)
       pts1 = np.float32(biggest) # ПОДГОТОВЬТЕ ТОЧКИ ДЛЯ ДЕФОРМАЦИИ
       pts2 = np.float32([[0, 0],[widthImg, 0], [0, heightImg],[widthImg, heightImg]]) # ПОДГОТОВЬТЕ ТОЧКИ ДЛЯ ДЕФОРМАЦИИ
       matrix = cv2.getPerspectiveTransform(pts1, pts2)
@@ -59,22 +52,9 @@ def auto_rotait(photo,out):
       imgWarpGray = cv2.cvtColor(imgWarpColored,cv2.COLOR_BGR2GRAY)
       imgAdaptiveThre= cv2.adaptiveThreshold(imgWarpGray, 255, 1, 1, 7, 2)
       imgAdaptiveThre = cv2.bitwise_not(imgAdaptiveThre)
-      imgAdaptiveThre=cv2.medianBlur(imgAdaptiveThre,3)
-
-      # Массив изображений для отображения
-      # imageArray = ([img,imgGray,imgThreshold,imgContours],
-      #               [imgBigContour,imgWarpColored, imgWarpGray,imgAdaptiveThre])
 
   else:
     print('некоректная фотография, необходимо сфотографировать паспорт на однородгом фоне')
-      # imageArray = ([img,imgGray,imnk, imgBlank, imggThreshold,imgContours],
-      #               [imgBlaBlank, imgBlank])
-
-  # ЭТИКЕТКИ ДЛЯ ОТОБРАЖЕНИЯ
-  # lables = [["Оригинал", "Серый", "Порог", "Контуры"],
-  #           ["Самый большой контур", "Искаженная перспектива", "Искаженный серый", "Адаптивный порог"]]
-
-  # stackedImage = stackImages(imageArray,0.75,lables)
 
   cv2.imwrite(ph, imgWarpColored)
   # count += 1

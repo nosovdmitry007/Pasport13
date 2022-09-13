@@ -1,8 +1,8 @@
 import csv
 import pandas as pd
 def to_csv(data):
-  cols = ['ID','issued_by_whom','first_name','date_of_issue','unit_code','series_and_number','surname','surname','patronymic','gender','date_of_birth','place_of_birth','accr_obl','accr_ocr']
-  path = "static_poly1.csv"
+  cols = ['ID','issued_by_whom','first_name','date_of_issue','unit_code','series_and_number','surname','patronymic','gender','date_of_birth','place_of_birth','accr_obl','accr_ocr']
+  path = "static_poly18.csv"
   with open(path, 'a+', encoding='utf-8') as f:
     wr = csv.DictWriter(f, fieldnames = cols)
     if f.tell() == 0:
@@ -26,7 +26,7 @@ def static_manual(df_manual, dt):
         for j in range(0,dt.shape[0]): #цик по файлу с авто вводом
 
           if df_manual.loc[i]['ID'] == dt.loc[j]['ID']:
-
+            d['ID'] = df_manual.loc[i]['ID']
             #разбиваем посимвольно каждую ячейку
             for pole in spis:
 
@@ -53,42 +53,33 @@ def static_manual(df_manual, dt):
                 else:
                   pol_m = list(df_manual.loc[i][pole].upper())
                   l_pol_m = len(pol_m)
-
-              if pol == pole:
-                d[pole] = 1
+              col = 0
+              sim = 0
+              for x, y in zip(pol, pol_m):
+                  col +=1
+                  if x == y.upper():
+                      sim +=1
+              if col == 0:
+                  ver = 0
               else:
-                d[pole] = 0
+                  ver = round(sim/col*100,2)
+              d[pole] = ver
+
+              # if pol == pol_m:
+              #       d[pole] = 1
+              #   else:
+              #       d[pole] = 0
             print(d)
             data['static'].append(d)
-            to_csv(data['static'])
 
-              # t=0
-              # l=0
-              # #проверяем длину каждого списка и выбираем минимальный
-              #
-              # l=min(l_pol,l_pol_m)
-              # #проверям соответствие символов по порядку
-              # for k in range(0,l):
-              #
-              #   if pol[k] == pol_m[k]:
-              #     t+=1
-              # #считаем точность
-              # if l_pol_m == 0:
-              #   if l_pol_m == l_pol:
-              #     toch = 1
-              #   else:
-              #     toch = 0
-              # else:
-              #   toch = t/l_pol_m
-              #   kol+=1
-              #
-              # toch_s+=toch
+            d = {}
 
-            # continue
-
+            continue
+          continue
+    to_csv(data['static'])
     print('Точность распознания: ')
 
-dt = pd.read_csv('data_many3.csv')
+dt = pd.read_csv('data_many18.csv')
 print(dt)
 df_manual = pd.read_csv('data_manual.csv')
 print(df_manual)

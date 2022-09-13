@@ -1,8 +1,9 @@
-import shutil
-from recognition import recognition
+# import shutil
+# from recognition import recognition
 from recognition_slovar import recognition_slovar
 import cv2
-import os
+# import os
+import time
 
 
 def rotate_image(mat, angle):
@@ -32,30 +33,27 @@ def rotate_image(mat, angle):
 
     return cv2.warpAffine(mat, rotation_mat, (bound_w, bound_h))
 
+#вырезаем области после детекции YOLO4
 def oblasty(txt,jpg):
 
-    # #для вывода областей
-    # if os.path.exists('oblosty'):
-    #     shutil.rmtree('oblosty')
-    # os.mkdir('oblosty')
-#
+    start_time_ob = time.time()
     oblasty={}
     f = open(txt, 'r')
     lines = f.readlines()
-    # koord = 0
     iss = 0
     plac = 0
     image = cv2.imread(jpg, cv2.IMREAD_GRAYSCALE)
     spiss = []
     acc_obl = 0
     col_obl = 0
+    #Если запускаем на GPU то начинаем с 14 строки, без GPU с 12
+    #создаем список с класом и координатами области
     for line in lines[12:]:
         z = line.replace('   ', ' ')
         u = z.replace(':  ', ' ')
         y = u.replace('\t', ' ')
         t = y.replace(')\n', '')
         data = t.split(' ')
-        # print(data)
         acc_obl += int(data[1][:-1])
         col_obl += 1
         cat = data[0].replace(':', '')
@@ -65,24 +63,20 @@ def oblasty(txt,jpg):
         w = int(data[7])
         spis = [cat, x, y, w, h]
         spiss.append(spis)
-    # def custom_key(spiss):
-    #     return spiss[2]
-    #a.sort(key=sort_col)
+#Сортируем список по у для того чтобы области шли по порядку сверху вниз
     spissok = sorted(spiss, reverse=False, key=lambda x: x[2])#spiss.sort(key=custom_key)
-    # print(spiss,'\n')
-    # print(spissok)
     for l in spissok:
-        # print(l)
         cat = l[0]
         y = int(l[2])
         x = int(l[1])
         h = int(l[4])
         w = int(l[3])
+        #обрезаем области и сохраняем их в словарь, добавляем к областе пиксели для увеличения области распознавания
         if ('signature' in cat) or ('photograph' in cat):
             pass
         else:
             if 'issued_by_whom' in cat:
-                nam = 'oblosty/' + cat + '_' + str(iss) + '.jpg'
+
                 ob = cat + '_' + str(iss)
                 iss += 1
                 yy = y - 5
@@ -92,10 +86,10 @@ def oblasty(txt,jpg):
                 if xx < 0:
                     xx = 0
                 cropped = image[yy:y + h + 5, xx:x + w + 30]
-                # cv2.imwrite(nam, cropped)
+
                 oblasty[ob] = cropped
             elif 'place_of_birth' in cat:
-                # nam = 'oblosty/' + cat + '_' + str(plac) + '.jpg'
+
                 ob = cat + '_' + str(plac)
                 plac += 1
                 yy = y - 5
@@ -120,6 +114,6 @@ def oblasty(txt,jpg):
                 oblasty[ob] = cropped
         accr_obl = round(acc_obl / col_obl, 2)
 
-    # print('Точность определения областей: ', accr_obl)
-    # recognition(jpg, accr_obl)
+#Передаем словарь с областями на распознание
+    print("--- %s seconds oblasty---" % (time.time() - start_time_ob))
     recognition_slovar(jpg, oblasty, accr_obl)
