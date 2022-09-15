@@ -4,6 +4,8 @@ import utlis
 
 from yolo import yolo
 #Программа по автоматичекому выравниванию паспорта, если есть фон, без фона работает не корректно
+from memory_profiler import profile
+# @profile()
 def auto_rotait(photo,out):
   ########################################################################
   webCamFeed = False
@@ -51,7 +53,7 @@ def auto_rotait(photo,out):
       # ПРИМЕНИТЬ АДАПТИВНЫЙ ПОРОГ
       imgWarpGray = cv2.cvtColor(imgWarpColored,cv2.COLOR_BGR2GRAY)
       imgAdaptiveThre= cv2.adaptiveThreshold(imgWarpGray, 255, 1, 1, 7, 2)
-      imgAdaptiveThre = cv2.bitwise_not(imgAdaptiveThre)
+      # imgAdaptiveThre = cv2.bitwise_not(imgAdaptiveThre)
 
   else:
     print('некоректная фотография, необходимо сфотографировать паспорт на однородгом фоне')

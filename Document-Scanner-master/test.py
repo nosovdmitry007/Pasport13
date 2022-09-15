@@ -2,14 +2,20 @@ from automaticfilter import auto_rotait
 from yolo import yolo
 import tracemalloc
 import time
+# mprof run <executable>
+import cv2
+
 #Тест производительности
 tracemalloc.start()
 start_time = time.time()
 
 
-put ='photo/10012.jpg'
+put ='10251.jpg'
 out = 'test.txt'
+# stackedImage = cv2.imread(put)
+# cv2.imshow('Result', stackedImage)
 # auto_rotait(put,out)
+# @profile
 yolo(put,out)
 
 print("--- %s seconds ---" % (time.time() - start_time))

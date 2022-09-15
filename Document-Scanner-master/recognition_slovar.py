@@ -14,7 +14,7 @@ reader = easyocr.Reader(['ru'], recog_network='custom_example', gpu=False)
 #сохранение в csv
 def to_csv(data):
   cols = ['ID','issued_by_whom','first_name','date_of_issue','unit_code','series_and_number','surname','patronymic','gender','date_of_birth','place_of_birth','accr_obl','accr_ocr']
-  path = "data_many18.csv"
+  path = "data_auto_baza.csv"
   with open(path, 'a+', encoding='utf-8') as f:
     wr = csv.DictWriter(f, fieldnames = cols)
     if f.tell() == 0:
@@ -51,7 +51,7 @@ def recognition_slovar(jpg,oblasty, accr_obl):
         pole = ''
         # Сцепляем распознаные поля в одной области и подсчитыаем среднию вероятность
         for k in range(len(result)):
-            print(str(result[k][1]), result[k][2] * 100)
+            # print(str(result[k][1]), result[k][2] * 100)
             if result[k][2] * 100 >= 35:
                 pole = pole + ' ' + str(result[k][1])
                 acc_ocr += result[k][2] * 100
