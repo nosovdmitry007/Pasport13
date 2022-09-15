@@ -1,8 +1,22 @@
 import numpy as np
 import cv2
 import os
+from oblasty import oblasty
 
+import tkinter.filedialog as fd
+def fil():
+    filetypes = (("Изображение", "*.jpg *.gif *.png"),
+                 ("Любой", "*"))
+    filename = fd.askopenfilename(title="Открыть файл", initialdir="/",
+                                  filetypes=filetypes)
+    if filename:
+        return filename.split('/')[-1]
 
+photo = fil()
+# def normal_photo(imag_put):
+imag_put = 'photo/' + photo
+# txt = 'oblosty_txt/' + photo.split('.')[0] + '.txt'
+# crop = 'oblosty'
 DOCUMENT_HEIGHT_WIDTH_RATIO = np.sqrt(1.982464) # ISO paper size concept (A0, A1, A2, A3, ...)
 #DOCUMENT_HEIGHT_WIDTH_RATIO = np.sqrt(1.982464) # паспорт
 WIDTH = 700
@@ -31,12 +45,12 @@ def onMouse(event, x, y, flags, param):
         for coordinates in edges:
             distance_from_edges.append(np.linalg.norm(np.array((x, y)) - coordinates))
         closer_edge = np.argmin(distance_from_edges)
-                
+
     elif event == cv2.EVENT_LBUTTONUP:
         drawing = False
         #Update edges and pts_src
         edges[closer_edge] = np.array((x, y))
-        # top left corner will have the smallest sum, 
+        # top left corner will have the smallest sum,
         # bottom right corner will have the largest sum
         # top-right will have smallest difference
         # botton left will have largest difference
@@ -52,7 +66,7 @@ def onMouse(event, x, y, flags, param):
 #pictures.sort()
 #for picture in pictures
 
-img = cv2.imread('pasport_photo/13.jpg')
+img = cv2.imread(imag_put)
 #img = cv2.imread('pictures/myImage3.jpg')
 #img = cv2.imread('pictures/scanned-form.jpg')
 #img = cv2.imread('pictures/81.jpg')
@@ -127,15 +141,23 @@ else: # Document on the horizontal axis
 
 cv2.namedWindow('image', cv2.WINDOW_NORMAL)
 cv2.setMouseCallback('image', onMouse, img)
-
+#
 while cv2.getWindowProperty('image', 0) >= 0: # Stop if user closes the window with mouse
     cv2.imshow('image', imageCopy)
     cv2.putText(imageCopy, 'Press q to extract or drag the circles to correct.',
               (10,10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,0,0), 1)
     k = cv2.waitKey(1) & 0xFF
     if k == 27: # ESC key
-        break
+        ## Необходимо добавить модуль по разметки фотографии YOLO 4
+
+
+        #Вызов функции обрезания вырезания областей фотографии
+        oblasty('oblosty_txt/' + photo.split('.')[0] + '.txt', 'photo/' + photo)
+        cv2.destroyWindow('extraction')
+        # cv2.destroyWindow('image')
+        cv2.waitKey(0)
     elif k == ord('q'):
+
         # Calculate Homography
         h, status = cv2.findHomography(pts_src, pts_dst)
 
@@ -144,4 +166,4 @@ while cv2.getWindowProperty('image', 0) >= 0: # Stop if user closes the window w
 
         cv2.namedWindow('extraction')
         cv2.imshow('extraction', img_out)
-cv2.destroyAllWindows()
+
