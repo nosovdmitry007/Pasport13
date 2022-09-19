@@ -8,10 +8,12 @@ nebrat = ''#'10167 10191 10092 10188 10125 10134 10148 ' \
 
 puti = os.listdir('baza')
 for fn in puti:
+    print(fn)
     if fn.split('.')[0] not in nebrat:
         put = 'baza/'+fn
-        out = 'test.txt'
-        # out = 'test_obl/'+ fn.split('.')[0] + '.txt'
+        # out = 'test.txt'
+        out = 'test_obl/'+ fn.split('.')[0] + '.txt'
         # auto_rotait(put,out)
         yolo(put,out)
-print(len(puti))
+
+# print(len(puti))
