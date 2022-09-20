@@ -3,7 +3,6 @@ import cv2
 import time
 from memory_profiler import profile
 import numpy as np
-
 def rotate_image(mat, angle):
     """
    Функция для поворота изображений (серийный номер)
@@ -77,49 +76,35 @@ def oblasty(txt,jpg):
                 ob = cat + '_' + str(iss)
                 iss += 1
                 yy = y - 5
-                xx = x - 15
+                xx = x - 30
                 if yy < 0:
                     yy = 0
                 if xx < 0:
                     xx = 0
-                cropped = image[yy:y + h + 5, xx:x + w + 15]
-                # print('wh',np.mean(cropped))
-                # print('ev',yark(cropped))
-                # cropped = cv2.threshold(cropped,abs(np.mean(cropped)-20),255,cv2.THRESH_BINARY)[1]#переводим в бинарное изображение с порогом 150 для лучшего распознаания
-                # cropped = cv2.adaptiveThreshold(cropped,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY,11,2)
+                cropped = image[yy:y + h + 5, xx:x + w + 30]
                 oblasty[ob] = cropped
-                # cv2.imwrite('oblosty/' + ob + '.jpg', cropped)
             elif 'place_of_birth' in cat:
                 ob = cat + '_' + str(plac)
                 plac += 1
                 yy = y - 5
-                xx = x - 15
+                xx = x - 30
                 if yy < 0:
                     yy = 0
                 if xx < 0:
                     xx = 0
-                cropped = image[yy:y + h, xx:x + w + 15]
-                # print('ev',yark(cropped))
-                # print(np.mean(cropped))
-                # cropped = cv2.threshold(cropped,abs(np.mean(cropped)-10),255,cv2.THRESH_BINARY)[1] #переводим в бинарное изображение с порогом 150
+                cropped = image[yy:y + h, xx:x + w + 30]
                 oblasty[ob] = cropped
             elif 'series' in cat:
-                nam = 'oblosty/' + cat + '.jpg'
                 ob = cat
+                # nam = 'oblosty/' + cat + '.jpg'
                 cropped = image[y - 10:y + h + 10, x - 3:x + w + 3]
-                # print('sr',np.mean(cropped))
-                # # print('ev',yark(cropped))
-                # cropped = cv2.threshold(cropped,abs(np.mean(cropped)-10),255,cv2.THRESH_BINARY)[1]#переводим в бинарное изображение с порогом 150
-                # cv2.imwrite(nam, cropped)
-
+                cv2.imwrite('oblosty/' + ob + '.jpg', cropped)
                 oblasty[ob] = rotate_image(cropped, 90)
             else:
                 ob = cat
                 cropped = image[y:y + h, x:x + w]
-                # print(np.mean(cropped))
-                # # print('ev',yark(cropped))
-                # cropped = cv2.threshold(cropped,abs(np.mean(cropped)-10),255,cv2.THRESH_BINARY)[1]#переводим в бинарное изображение с порогом 150
                 oblasty[ob] = cropped
+
         accr_obl = round(acc_obl / col_obl, 2)
 
 #Передаем словарь с областями на распознание

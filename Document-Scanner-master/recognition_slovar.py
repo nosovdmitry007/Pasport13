@@ -11,7 +11,7 @@ reader = easyocr.Reader(['ru'], recog_network='custom_example', gpu=False) #ра
 #сохранение в csv
 def to_csv(data):
   cols = ['ID','issued_by_whom','first_name','date_of_issue','unit_code','series_and_number','surname','patronymic','gender','date_of_birth','place_of_birth','accr_obl','accr_ocr']
-  path = "data_auto_baza_178.csv"
+  path = "data_auto_baza_8.csv"
   with open(path, 'a+', encoding='utf-8') as f:
     wr = csv.DictWriter(f, fieldnames = cols)
     if f.tell() == 0:
@@ -70,20 +70,15 @@ def recognition_slovar(jpg,oblasty, accr_obl):
                 if len(pole) >= 10:
                     if ver < result[k][2]:
                         series_and_number = pole
-
 #Убираем лишние знаки в распознание текста, если такие находятся и приводим к формату
             if 'issued_by_whom' in i or 'place_of_birth' in i or 'series_and_number' in i:
                 pass
             elif 'date' in i:
-                pole = pole.replace('.', '')
-                pole = pole.replace(' ', '')
-                pole = pole.replace('-', '')
+                pole = pole.replace('.', '').replace(' ', '').replace('-', '')
                 pole = pole[:2] + '.' + pole[2:4] + '.' + pole[4:]
                 d[i.split('.', 1)[0]] = pole.upper().strip()
             elif 'cod' in i:
-                pole = pole.replace(' . ', '')
-                pole = pole.replace(' ', '')
-                pole = pole.replace('-', '')
+                pole = pole.replace(' . ', '').replace(' ', '').replace('-', '')
                 pole = pole[:3] + '-' + pole[3:]
                 d[i.split('.', 1)[0]] = pole.upper().strip()
                 #заменяем пол
@@ -105,7 +100,7 @@ def recognition_slovar(jpg,oblasty, accr_obl):
         if len(series_and_number) == 10:
             series_and_number = series_and_number[:2]+' ' + series_and_number[2:4] + ' ' + series_and_number[4:]
         else:
-            series_and_number = 'поле не распознано'
+            series_and_number = 'поле распознано не полностью' + series_and_number
     else:
         series_and_number = 'поле не распознано'
 # Создаем файлы json and csv

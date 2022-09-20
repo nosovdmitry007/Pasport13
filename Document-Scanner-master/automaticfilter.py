@@ -67,11 +67,8 @@ def auto_rotait(photo,out):
       pts2 = np.float32([[0, 0],[widthImg, 0], [0, heightImg],[widthImg, heightImg]]) # ПОДГОТОВЬТЕ ТОЧКИ ДЛЯ ДЕФОРМАЦИИ
       matrix = cv2.getPerspectiveTransform(pts1, pts2)
       imgWarpColored = cv2.warpPerspective(img, matrix, (widthImg, heightImg))
-
   else:
-    print('некоректная фотография, необходимо сфотографировать паспорт на однородном фоне')
-
+      print('некоректная фотография, необходимо сфотографировать паспорт на однородном фоне\n фотография не обрезалась изменен размер')
+      imgWarpColored = img
   cv2.imwrite('oblosty/' + ph, imgWarpColored)
-  # count += 1
-  # print(pathImage)
   yolo(ph,out)

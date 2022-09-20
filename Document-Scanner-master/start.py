@@ -2,7 +2,7 @@ from automaticfilter import auto_rotait
 from yolo import yolo
 import time
 from memory_profiler import profile
-put ='baza/20017.jpg'
+put ='baza/10223.jpg'
 @profile()
 
 def start(put):
