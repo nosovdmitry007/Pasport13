@@ -11,7 +11,7 @@ reader = easyocr.Reader(['ru'], recog_network='custom_example', gpu=False) #ра
 #сохранение в csv
 def to_csv(data):
   cols = ['ID','issued_by_whom','first_name','date_of_issue','unit_code','series_and_number','surname','patronymic','gender','date_of_birth','place_of_birth','accr_obl','accr_ocr']
-  path = "data_auto_baza_8.csv"
+  path = "data_auto_baza_iter_60000_21_09_cvet1.csv"
   with open(path, 'a+', encoding='utf-8') as f:
     wr = csv.DictWriter(f, fieldnames = cols)
     if f.tell() == 0:
@@ -93,8 +93,10 @@ def recognition_slovar(jpg,oblasty, accr_obl):
     #пост обработка текста, подводим под формат паспорта
     place_of_birth = place_of_birth.upper()
     issued_by_whom = issued_by_whom.upper()
-    place_of_birth = place_of_birth.replace('ГОР ', 'ГОР. ').replace('Г ', 'Г. ').replace('ОБЛ ', 'ОБЛ. ').replace('ПОС ', 'ПОС. ').replace(' . ', '. ').replace(' .', '.').replace('  ', ' ').replace('..', '.')
-    issued_by_whom = issued_by_whom.replace('ГОР ', 'ГОР. ').replace('Г ', 'Г. ').replace('ОБЛ ', 'ОБЛ. ').replace('ПОС ', 'ПОС. ').replace(' . ', '. ').replace(' .', '.').replace('  ', ' ').replace('..', '.')
+    if place_of_birth[:2] == 'C ':
+        place_of_birth = place_of_birth.replace('ГОР ', 'ГОР. ')
+    place_of_birth = place_of_birth.replace('ГОР ', 'ГОР. ').replace(' С ', ' С. ').replace(' Г ', ' Г. ').replace('ОБЛ ', 'ОБЛ. ').replace('ПОС ', 'ПОС. ').replace(' . ', '. ').replace(' .', '.').replace('  ', ' ').replace('..', '.')
+    issued_by_whom = issued_by_whom.replace('ГОР ', 'ГОР. ').replace(' С ', ' С. ').replace(' Г ', ' Г. ').replace('ОБЛ ', 'ОБЛ. ').replace('ПОС ', 'ПОС. ').replace(' . ', '. ').replace(' .', '.').replace('  ', ' ').replace('..', '.')
     if series_and_number:
         series_and_number = series_and_number.replace(' ', '')
         if len(series_and_number) == 10:

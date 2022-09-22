@@ -3,6 +3,8 @@ import cv2
 import time
 from memory_profiler import profile
 import numpy as np
+
+
 def rotate_image(mat, angle):
     """
    Функция для поворота изображений (серийный номер)
@@ -38,7 +40,9 @@ def oblasty(txt,jpg):
     lines = f.readlines()
     iss = 0
     plac = 0
+
     image = cv2.imread(jpg, cv2.IMREAD_GRAYSCALE)
+
     spiss = []
     acc_obl = 0
     col_obl = 0

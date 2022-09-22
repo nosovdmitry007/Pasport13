@@ -4,7 +4,7 @@ from jiwer import wer
 from tqdm import tqdm
 def to_csv(data):
   cols = ['ID','issued_by_whom','first_name','date_of_issue','unit_code','series_and_number','surname','patronymic','gender','date_of_birth','place_of_birth','accr_obl','accr_ocr']
-  path = "static_poly_baza_8.csv"
+  path = "static_poly_baza_60.csv"
   with open(path, 'a+', encoding='utf-8') as f:
     wr = csv.DictWriter(f, fieldnames = cols)
     if f.tell() == 0:
@@ -79,7 +79,7 @@ def static_manual(df_manual, dt):
     # to_csv(data['static_obr'])
     print(f'Точность распознания на {kol} фотографиях: ', round(sred_ver/col_ver,4))
     # print('Точность распознания obr: ', )
-dt = pd.read_csv('data_auto_baza_8.csv')
+dt = pd.read_csv('data_auto_baza_iter_60000_21_09.csv')
 
 df_manual = pd.read_csv('data_manual.csv')
 
