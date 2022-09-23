@@ -7,16 +7,12 @@ def yolo_4(put):
     start_time = time.time()
     # Load Yolo
     net = cv2.dnn.readNet("yolov4-obj_last_old.weights", "yolov4-obj.cfg")
-    classes =  []
     with open ("passport.names","r") as f:
         classes =  [line.strip() for line in f.readlines()]
     layer_names = net.getLayerNames()
     output_layers = [layer_names[i - 1] for i in net.getUnconnectedOutLayers()]
-    colors = np.random.uniform(0, 255, size=(len(classes), 3))
-
     # Loading image
     img = cv2.imread(put)
-    #img = cv2.resize (img, None, fx=0.4, fy=0.4)
     height, width, channels = img.shape
 
     # Detecting objects#
@@ -47,25 +43,11 @@ def yolo_4(put):
                 class_ids.append(class_id)
 
     indexes = cv2.dnn.NMSBoxes(boxes, confidences, 0.5, 0.4)
-
-    # def draw_bounding_box(img, class_id,  x, y, x_plus_w, y_plus_h):
-    #
-    #     label = str(classes[class_id])
-    #     color = colors[class_id]
-    #     cv2.rectangle(img, (x,y), (x_plus_w,y_plus_h), color, 2)
-    #     cv2.putText(img, label, (x-10,y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
-
     d = []
     z=[]
     for i in indexes:
 
         box = boxes[i]
-
-        x = box[0]
-        y = box[1]
-        w = box[2]
-        h = box[3]
-
         d.append(classes[class_ids[i]])
         d.append(box)
         d.append(confidences[i])
@@ -74,8 +56,6 @@ def yolo_4(put):
 
         z.append(flattenlist(d))
         d=[]
-        # draw_bounding_box(img, class_ids[i], confidences[i], round(x), round(y), round(x + w), round(y + h))
-
     print("--- %s seconds ---" % (time.time() - start_time))
     oblasty_yolo_4(put,img,z)
 

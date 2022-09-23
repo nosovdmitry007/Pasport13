@@ -2,16 +2,12 @@ import pprint
 import easyocr
 import json
 import cv2
-import csv
 import time
-from memory_profiler import profile
 #запускается 1 раз для скачивания библиотек
-# reader = easyocr.Reader(['ru'], gpu=False) #распознание из коробки
 reader = easyocr.Reader(['ru'], recog_network='custom_example', gpu=False) #распознание с дообучением
-#сохранение в csv
+
 
 #распознание текста
-# @profile()
 def recognition_slovar(jpg,oblasty):
     start_time_r = time.time() #засекаем время выполнеия функции
 #__________________________________________________________________
@@ -33,7 +29,6 @@ def recognition_slovar(jpg,oblasty):
         #Для каждого класса устанавливаем свои ограничения на распознания классов
         if 'date' in i or 'code' in i or 'series' in i:
             result = reader.readtext(image, allowlist='0123456789-. ')
-            # print(result)
         elif 'surname' in i or 'name' in i or 'patronymic' in i:
             result = reader.readtext(image,
                                      allowlist='АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ-')
@@ -101,11 +96,6 @@ def recognition_slovar(jpg,oblasty):
     d['issued_by_whom'] = issued_by_whom.strip()
     d['place_of_birth'] = place_of_birth.strip()
     d['series_and_number'] = series_and_number.strip()
-    if col_ocr == 0:
-        accr_ocr = 0
-    else:
-        accr_ocr = round(acc_ocr / col_ocr, 2)
-
     data['pasport'].append(d)
     with open('data.json', 'w', encoding='utf-8') as f:
         f.write(json.dumps(data, ensure_ascii=False))

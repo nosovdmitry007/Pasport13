@@ -1,7 +1,6 @@
 from recognition_slovar_yolo_4 import recognition_slovar
 import cv2
 import time
-from memory_profiler import profile
 import numpy as np
 
 
@@ -31,39 +30,13 @@ def rotate_image(mat, angle):
     return cv2.warpAffine(mat, rotation_mat, (bound_w, bound_h))
 
 #вырезаем области после детекции YOLO4
-# @profile()
+
 def oblasty_yolo_4(put,image,box):
 
     start_time_ob = time.time()
     oblasty={}
-    # f = open(txt, 'r')
-    # lines = f.readlines()
     iss = 0
     plac = 0
-
-    # image = cv2.imread(jpg, cv2.IMREAD_GRAYSCALE)
-
-    spiss = []
-    acc_obl = 0
-    col_obl = 0
-    #Если запускаем на GPU то начинаем с 14 строки, без GPU с 12
-    #создаем список с класом и координатами области
-    #Формируем список областей для распознания
-    # for line in lines[12:]:
-    #     z = line.replace('   ', ' ')
-    #     u = z.replace(':  ', ' ')
-    #     y = u.replace('\t', ' ')
-    #     t = y.replace(')\n', '')
-    #     data = t.split(' ')
-    #     acc_obl += int(data[1][:-1])
-    #     col_obl += 1
-    #     cat = data[0].replace(':', '')
-    #     y = int(data[5])
-    #     x = int(data[3])
-    #     h = int(data[9])
-    #     w = int(data[7])
-    #     spis = [cat, x, y, w, h]
-    #     spiss.append(spis)
 #Сортируем список по у для того чтобы области шли по порядку сверху вниз
     spissok = sorted(box, reverse=False, key=lambda x: x[2])#spiss.sort(key=custom_key)
     for l in spissok:
@@ -100,16 +73,12 @@ def oblasty_yolo_4(put,image,box):
                 oblasty[ob] = cropped
             elif 'series' in cat:
                 ob = cat
-                # nam = 'oblosty/' + cat + '.jpg'
                 cropped = image[y - 10:y + h + 10, x - 3:x + w + 3]
-                # cv2.imwrite('oblosty/' + ob + '.jpg', cropped)
                 oblasty[ob] = rotate_image(cropped, 90)
             else:
                 ob = cat
                 cropped = image[y:y + h, x:x + w]
                 oblasty[ob] = cropped
-
-        # accr_obl = round(acc_obl / col_obl, 2)
 
 #Передаем словарь с областями на распознание
     print("--- %s seconds oblasty---" % (time.time() - start_time_ob))
