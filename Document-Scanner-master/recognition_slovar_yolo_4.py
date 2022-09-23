@@ -9,18 +9,10 @@ from memory_profiler import profile
 # reader = easyocr.Reader(['ru'], gpu=False) #распознание из коробки
 reader = easyocr.Reader(['ru'], recog_network='custom_example', gpu=False) #распознание с дообучением
 #сохранение в csv
-def to_csv(data):
-  cols = ['ID','issued_by_whom','first_name','date_of_issue','unit_code','series_and_number','surname','patronymic','gender','date_of_birth','place_of_birth','accr_obl','accr_ocr']
-  path = "data_auto_baza_iter_90000_21_09_cvet1.csv"
-  with open(path, 'a+', encoding='utf-8') as f:
-    wr = csv.DictWriter(f, fieldnames = cols)
-    if f.tell() == 0:
-        wr.writeheader()
-    wr.writerows(data)
 
 #распознание текста
 # @profile()
-def recognition_slovar(jpg,oblasty, accr_obl):
+def recognition_slovar(jpg,oblasty):
     start_time_r = time.time() #засекаем время выполнеия функции
 #__________________________________________________________________
     #задаем начальные значения
@@ -113,11 +105,10 @@ def recognition_slovar(jpg,oblasty, accr_obl):
         accr_ocr = 0
     else:
         accr_ocr = round(acc_ocr / col_ocr, 2)
-    d['accr_ocr'] = accr_ocr
-    d['accr_obl'] = accr_obl
+
     data['pasport'].append(d)
     with open('data.json', 'w', encoding='utf-8') as f:
         f.write(json.dumps(data, ensure_ascii=False))
     pprint.pprint(data['pasport'])
-    to_csv(data['pasport'])#зписываем json в csv
+
     print("--- %s seconds_records ocr---" % (time.time() - start_time_r))
