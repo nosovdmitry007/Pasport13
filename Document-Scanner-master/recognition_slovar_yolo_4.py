@@ -79,8 +79,10 @@ def recognition_slovar(jpg,oblasty):
     place_of_birth = place_of_birth.upper()
     issued_by_whom = issued_by_whom.upper()
     if place_of_birth[:2] == 'C ':
-        place_of_birth = place_of_birth.replace('ГОР ', 'ГОР. ')
-    place_of_birth = place_of_birth.replace('ГОР ', 'ГОР. ').replace(' С ', ' С. ').replace(' Г ', ' Г. ').replace('ОБЛ ', 'ОБЛ. ').replace('ПОС ', 'ПОС. ').replace(' . ', '. ').replace(' .', '.').replace('  ', ' ').replace('..', '.')
+        place_of_birth = place_of_birth.replace('С ', ' С. ')
+    if issued_by_whom[:2] == 'C ':
+        issued_by_whom = issued_by_whom.replace('С ', ' С. ')
+    place_of_birth = place_of_birth.replace('ГОР ', 'ГОР. ').replace(' Г ', ' Г. ').replace('ОБЛ ', 'ОБЛ. ').replace('ПОС ', 'ПОС. ').replace(' . ', '. ').replace(' .', '.').replace('  ', ' ').replace('..', '.')
     issued_by_whom = issued_by_whom.replace('ГОР ', 'ГОР. ').replace(' С ', ' С. ').replace(' Г ', ' Г. ').replace('ОБЛ ', 'ОБЛ. ').replace('ПОС ', 'ПОС. ').replace(' . ', '. ').replace(' .', '.').replace('  ', ' ').replace('..', '.')
     if series_and_number:
         series_and_number = series_and_number.replace(' ', '')

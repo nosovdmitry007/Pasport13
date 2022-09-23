@@ -53,6 +53,6 @@ def yolo_4(put):
         flattenlist = lambda d:[item for element in d for item in flattenlist(element)] if type(d) is list else [d]
         z.append(flattenlist(d))
         d=[]
-    print("--- %s seconds ---" % (time.time() - start_time))
+    print("--- %s seconds yolo_4---" % (time.time() - start_time))
     oblasty_yolo_4(put,img,z)
 
