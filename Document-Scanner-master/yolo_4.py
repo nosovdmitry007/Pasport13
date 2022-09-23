@@ -46,14 +46,11 @@ def yolo_4(put):
     d = []
     z=[]
     for i in indexes:
-
         box = boxes[i]
         d.append(classes[class_ids[i]])
         d.append(box)
         d.append(confidences[i])
-
         flattenlist = lambda d:[item for element in d for item in flattenlist(element)] if type(d) is list else [d]
-
         z.append(flattenlist(d))
         d=[]
     print("--- %s seconds ---" % (time.time() - start_time))

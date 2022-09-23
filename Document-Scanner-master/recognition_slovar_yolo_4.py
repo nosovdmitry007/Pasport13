@@ -5,8 +5,6 @@ import cv2
 import time
 #запускается 1 раз для скачивания библиотек
 reader = easyocr.Reader(['ru'], recog_network='custom_example', gpu=False) #распознание с дообучением
-
-
 #распознание текста
 def recognition_slovar(jpg,oblasty):
     start_time_r = time.time() #засекаем время выполнеия функции
