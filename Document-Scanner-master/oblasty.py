@@ -1,3 +1,5 @@
+import math
+
 from recognition_slovar import recognition_slovar
 import cv2
 import time
@@ -29,7 +31,8 @@ def rotate_image(mat, angle):
 
     # поверните изображение с новыми границами и преобразованной матрицей поворота
     return cv2.warpAffine(mat, rotation_mat, (bound_w, bound_h))
-
+def zero( n ):
+    return n * ( n > 0 )
 #вырезаем области после детекции YOLO4
 # @profile()
 def oblasty(txt,jpg):
@@ -79,35 +82,18 @@ def oblasty(txt,jpg):
             if 'issued_by_whom' in cat:
                 ob = cat + '_' + str(iss)
                 iss += 1
-                yy = y - 5
-                xx = x - 30
-                if yy < 0:
-                    yy = 0
-                if xx < 0:
-                    xx = 0
-                cropped = image[yy:y + h + 5, xx:x + w + 30]
-                oblasty[ob] = cropped
             elif 'place_of_birth' in cat:
                 ob = cat + '_' + str(plac)
                 plac += 1
-                yy = y - 5
-                xx = x - 30
-                if yy < 0:
-                    yy = 0
-                if xx < 0:
-                    xx = 0
-                cropped = image[yy:y + h, xx:x + w + 30]
-                oblasty[ob] = cropped
-            elif 'series' in cat:
+            elif 'series' not in cat:
                 ob = cat
-                # nam = 'oblosty/' + cat + '.jpg'
-                cropped = image[y - 10:y + h + 10, x - 3:x + w + 3]
-                cv2.imwrite('oblosty/' + ob + '.jpg', cropped)
+            oblasty[ob] = image[zero(y - math.ceil(h * 0.03)):y + math.ceil(h * 1.03),
+                          zero(x - math.ceil(w * 0.1)):x + math.ceil(w * 1.1)]
+            if 'series' in cat:
+                ob = cat
+                cropped = image[zero(y - math.ceil(h * 0.1)):y + math.ceil(h * 1.1),
+                          zero(x - math.ceil(w * 0.03)):x + math.ceil(w * 1.03)]
                 oblasty[ob] = rotate_image(cropped, 90)
-            else:
-                ob = cat
-                cropped = image[y:y + h, x:x + w]
-                oblasty[ob] = cropped
 
         accr_obl = round(acc_obl / col_obl, 2)
 

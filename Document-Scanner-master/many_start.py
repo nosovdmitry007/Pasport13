@@ -7,7 +7,7 @@ for fn in puti:
     print(fn)
     put = 'baza/test/'+fn
     # out = 'test.txt'
-    out = 'test_obl/'+ fn.split('.')[0] + '.txt'
+    out = 'test_obl.txt'
     # auto_rotait(put,out)
     yolo(put,out)
 

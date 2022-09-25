@@ -7,8 +7,8 @@ def yolo_4(put):
     start_time = time.time()
     # Load Yolo
     net = cv2.dnn.readNet("yolov4-obj_last_old.weights", "yolov4-obj.cfg")
-    with open ("passport.names","r") as f:
-        classes =  [line.strip() for line in f.readlines()]
+    with open("passport.names","r") as f:
+        classes = [line.strip() for line in f.readlines()]
     layer_names = net.getLayerNames()
     output_layers = [layer_names[i - 1] for i in net.getUnconnectedOutLayers()]
     # Loading image
@@ -44,7 +44,7 @@ def yolo_4(put):
 
     indexes = cv2.dnn.NMSBoxes(boxes, confidences, 0.5, 0.4)
     d = []
-    z=[]
+    z = []
     for i in indexes:
         box = boxes[i]
         d.append(classes[class_ids[i]])

@@ -11,7 +11,7 @@ reader = easyocr.Reader(['ru'], recog_network='custom_example', gpu=False) #ра
 #сохранение в csv
 def to_csv(data):
   cols = ['ID','issued_by_whom','first_name','date_of_issue','unit_code','series_and_number','surname','patronymic','gender','date_of_birth','place_of_birth','accr_obl','accr_ocr']
-  path = "data_auto_baza_iter_90000_21_09_cvet1.csv"
+  path = "data_auto_baza_iter_30000_25_09.csv"
   with open(path, 'a+', encoding='utf-8') as f:
     wr = csv.DictWriter(f, fieldnames = cols)
     if f.tell() == 0:
@@ -75,11 +75,11 @@ def recognition_slovar(jpg,oblasty, accr_obl):
                 pass
             elif 'date' in i:
                 pole = pole.replace('.', '').replace(' ', '').replace('-', '')
-                pole = pole[:2] + '.' + pole[2:4] + '.' + pole[4:]
+                pole = pole[:2] + '.' + pole[2:4] + '.' + pole[4:8]
                 d[i.split('.', 1)[0]] = pole.upper().strip()
             elif 'cod' in i:
                 pole = pole.replace(' . ', '').replace(' ', '').replace('-', '')
-                pole = pole[:3] + '-' + pole[3:]
+                pole = pole[:3] + '-' + pole[3:6]
                 d[i.split('.', 1)[0]] = pole.upper().strip()
                 #заменяем пол
             elif 'gender' in i:
@@ -94,13 +94,19 @@ def recognition_slovar(jpg,oblasty, accr_obl):
     place_of_birth = place_of_birth.upper()
     issued_by_whom = issued_by_whom.upper()
     if place_of_birth[:2] == 'C ':
-        place_of_birth = place_of_birth.replace('ГОР ', 'ГОР. ')
-    place_of_birth = place_of_birth.replace('ГОР ', 'ГОР. ').replace(' С ', ' С. ').replace(' Г ', ' Г. ').replace('ОБЛ ', 'ОБЛ. ').replace('ПОС ', 'ПОС. ').replace(' . ', '. ').replace(' .', '.').replace('  ', ' ').replace('..', '.')
-    issued_by_whom = issued_by_whom.replace('ГОР ', 'ГОР. ').replace(' С ', ' С. ').replace(' Г ', ' Г. ').replace('ОБЛ ', 'ОБЛ. ').replace('ПОС ', 'ПОС. ').replace(' . ', '. ').replace(' .', '.').replace('  ', ' ').replace('..', '.')
+        place_of_birth = place_of_birth.replace('С ', ' С. ')
+    if issued_by_whom[:2] == 'C ':
+        issued_by_whom = issued_by_whom.replace('С ', ' С. ')
+    place_of_birth = place_of_birth.replace('ГОР ', 'ГОР. ').replace(' Г ', ' Г. ') \
+        .replace('ОБЛ ', 'ОБЛ. ').replace('ПОС ', 'ПОС. ').replace(' . ', '. ') \
+        .replace(' .', '.').replace('  ', ' ').replace('..', '.')
+    issued_by_whom = issued_by_whom.replace('ГОР ', 'ГОР. ').replace(' С ', ' С. ') \
+        .replace(' Г ', ' Г. ').replace('ОБЛ ', 'ОБЛ. ').replace('ПОС ', 'ПОС. ') \
+        .replace(' . ', '. ').replace(' .', '.').replace('  ', ' ').replace('..', '.')
     if series_and_number:
         series_and_number = series_and_number.replace(' ', '')
         if len(series_and_number) == 10:
-            series_and_number = series_and_number[:2]+' ' + series_and_number[2:4] + ' ' + series_and_number[4:]
+            series_and_number = series_and_number[:2] + ' ' + series_and_number[2:4] + ' ' + series_and_number[4:10]
         else:
             series_and_number = 'поле распознано не полностью' + series_and_number
     else:
