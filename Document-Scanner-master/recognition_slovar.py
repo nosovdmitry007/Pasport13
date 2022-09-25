@@ -58,6 +58,7 @@ def recognition_slovar(jpg,oblasty, accr_obl):
                 acc_ocr += result[k][2] * 100
                 col_ocr += 1
         #ели поле не пустое то записываем результат распознавания (json +csv)
+        print(pole)
         if pole:
             pole = pole.strip()#удаляем пробелы вконце и в неачале
             #сцепляем 

@@ -75,6 +75,7 @@ def oblasty(txt,jpg):
         x = int(l[1])
         h = int(l[4])
         w = int(l[3])
+        ob=''
         #обрезаем области и сохраняем их в словарь, добавляем к областе пиксели для увеличения области распознавания
         if ('signature' in cat) or ('photograph' in cat):
             pass #поля подпись и фотографию не распознаем, поэтому с ними ничего не делаем
@@ -87,7 +88,8 @@ def oblasty(txt,jpg):
                 plac += 1
             elif 'series' not in cat:
                 ob = cat
-            oblasty[ob] = image[zero(y - math.ceil(h * 0.03)):y + math.ceil(h * 1.03),
+            if ob:
+                oblasty[ob] = image[zero(y - math.ceil(h * 0.03)):y + math.ceil(h * 1.03),
                           zero(x - math.ceil(w * 0.1)):x + math.ceil(w * 1.1)]
             if 'series' in cat:
                 ob = cat
